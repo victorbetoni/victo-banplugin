@@ -43,7 +43,7 @@ public enum SingleBanService implements IBanService {
 
     @Override
     public void banPlayer(String nickname, String reason, LocalDateTime issued, LocalDateTime expire) {
-
+        Queries.banPlayer(nickname, reason, issued, expire);
     }
 
 }
