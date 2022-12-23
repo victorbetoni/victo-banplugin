@@ -6,19 +6,19 @@ import java.util.UUID;
 
 public class Banishment {
 
-    private UUID player;
+    private String player;
     private String reason;
-    private LocalDateTime start;
-    private LocalDateTime ending;
+    private LocalDateTime issuance;
+    private LocalDateTime expiration;
 
-    public Banishment(UUID player, String reason, LocalDateTime start, LocalDateTime ending) {
+    public Banishment(String player, String reason, LocalDateTime issuance, LocalDateTime expiration) {
         this.player = player;
         this.reason = reason;
-        this.start = start;
-        this.ending = ending;
+        this.issuance = issuance;
+        this.expiration = expiration;
     }
 
-    public UUID getPlayer() {
+    public String getPlayer() {
         return player;
     }
 
@@ -26,15 +26,15 @@ public class Banishment {
         return reason;
     }
 
-    public LocalDateTime getStart() {
-        return start;
+    public LocalDateTime getIssuance() {
+        return issuance;
     }
 
-    public LocalDateTime getEnding() {
-        return ending;
+    public LocalDateTime getExpiration() {
+        return expiration;
     }
 
-    public boolean ended() {
-        return LocalDateTime.now().isAfter(ending);
+    public boolean expired() {
+        return LocalDateTime.now().isAfter(expiration);
     }
 }

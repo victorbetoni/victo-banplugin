@@ -1,6 +1,8 @@
 package net.victo.banplugin;
 
+import net.victo.banplugin.command.BanCommand;
 import net.victo.banplugin.database.MySQLConnector;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class BanPlugin extends JavaPlugin {
@@ -15,6 +17,8 @@ public class BanPlugin extends JavaPlugin {
 
         this.connector = new MySQLConnector.Builder().url("localhost:3306/bans").plugin(this).build();
         this.connector.connect();
+
+        this.getCommand("ban").setExecutor(new BanCommand());
 
     }
 

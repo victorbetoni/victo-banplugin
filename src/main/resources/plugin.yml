@@ -2,3 +2,7 @@ name: VictoBanPlugin
 main: net.victo.banplugin.BanPlugin
 version: 1.0
 api-version: 1.16
+commands:
+  ban:
+    aliases:
+      - tempban
