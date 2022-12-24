@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public enum SingleBanService implements IBanService {
@@ -43,6 +44,13 @@ public enum SingleBanService implements IBanService {
         return getHistory(player).stream()
                 .flatMap(action -> action instanceof Banishment ? Stream.of((Banishment) action) : Stream.empty())
                 .anyMatch(ban -> !ban.expired());
+    }
+
+    @Override
+    public Optional<Banishment> getLatestIssuedActiveBan(String player) {
+        return getHistory(player).stream()
+                .flatMap(action -> action instanceof Banishment ? Stream.of((Banishment) action) : Stream.empty()).
+                max(Comparator.comparing(BanAction::getIssuedOn));
     }
 
     @Override

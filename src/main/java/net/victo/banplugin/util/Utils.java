@@ -2,11 +2,14 @@ package net.victo.banplugin.util;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Utils {
+
+    public static final DateTimeFormatter DEFAULT_DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
     public static LocalDateTime plusTime(String input, LocalDateTime time) {
         Map<String, Integer> suffixToSeconds = Map.of(
