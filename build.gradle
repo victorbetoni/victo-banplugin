@@ -1,6 +1,15 @@
+buildscript {
+    dependencies {
+        classpath 'de.undercouch:gradle-download-task:4.1.1'
+    }
+}
+
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
+
+apply plugin: 'de.undercouch.download'
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
@@ -16,7 +25,32 @@ repositories {
     maven { url "https://repo.codemc.io/repository/maven-public/" }
 }
 
+ext {
+    downloadedFilesFolder = new File(buildDir, 'downloaded-files')
+}
+
+def downloadedFile = { url, name ->
+    File file = new File(downloadedFilesFolder, "${name}")
+    file.parentFile.mkdirs()
+    if (!file.exists()) {
+        new URL(url).withInputStream { downloadStream ->
+            file.withOutputStream { fileOut ->
+                fileOut << downloadStream
+            }
+        }
+    }
+    files(file.absolutePath)
+}
+
+shadowJar {
+    configurations = [project.configurations.shadow]
+}
+
 dependencies {
     implementation group: 'com.google.guava', name: 'guava', version: '31.1-jre'
     compileOnly "org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT"
+    shadow downloadedFile('https://github.com/victorbetoni/ThreaderLib/releases/download/release/threader-lib.jar', 'threader-lib.jar')
 }
+
+build.dependsOn(shadowJar)
+
