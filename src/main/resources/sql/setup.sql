@@ -1,6 +1,8 @@
-CREATE TABLE IF NOT EXISTS banishments(
+CREATE TABLE IF NOT EXISTS ban_log(
     player VARCHAR(36),
+    issuer VARCHAR(36),
     reason VARCHAR(128),
-    starts_in DATETIME,
-    ends_in DATETIME
+    action ENUM('ban','unban'),
+    issued_on DATETIME,
+    expire_on DATETIME
 );

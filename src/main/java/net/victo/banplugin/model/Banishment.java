@@ -4,30 +4,19 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
-public class Banishment {
+public class Banishment extends BanAction {
 
-    private String player;
     private String reason;
-    private LocalDateTime issuance;
     private LocalDateTime expiration;
 
-    public Banishment(String player, String reason, LocalDateTime issuance, LocalDateTime expiration) {
-        this.player = player;
+    public Banishment(String player, String issuer, LocalDateTime issuedOn, String reason, LocalDateTime expiration) {
+        super(player, issuer, issuedOn);
         this.reason = reason;
-        this.issuance = issuance;
         this.expiration = expiration;
-    }
-
-    public String getPlayer() {
-        return player;
     }
 
     public String getReason() {
         return reason;
-    }
-
-    public LocalDateTime getIssuance() {
-        return issuance;
     }
 
     public LocalDateTime getExpiration() {

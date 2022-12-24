@@ -4,29 +4,31 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import net.victo.banplugin.database.Queries;
 import net.victo.banplugin.domain.IBanService;
+import net.victo.banplugin.model.BanAction;
 import net.victo.banplugin.model.Banishment;
 import org.bukkit.entity.Player;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Stream;
 
 public enum SingleBanService implements IBanService {
     INSTANCE;
 
-    private Multimap<String, Banishment> cachedBanishments = ArrayListMultimap.create();
+    private Multimap<String, BanAction> cachedBanishments = ArrayListMultimap.create();
 
 
     @Override
-    public Multimap<String, Banishment> getCache() {
+    public Multimap<String, BanAction> getCache() {
         return cachedBanishments;
     }
 
     @Override
-    public List<Banishment> getBanishments(String player) {
-        if(!cachedBanishments.containsKey(player)) {
+    public List<BanAction> getHistory(String player) {
+        if (!cachedBanishments.containsKey(player)) {
             return Collections.emptyList();
         }
-        List<Banishment> banishments = Queries.getBanishments(player);
+        List<BanAction> banishments = Queries.getHistory(player);
         cachedBanishments.putAll(player, banishments);
         return banishments;
     }
@@ -38,12 +40,19 @@ public enum SingleBanService implements IBanService {
 
     @Override
     public boolean hasActiveBan(String player) {
-        return getBanishments(player).stream().anyMatch(ban -> !ban.expired());
+        return getHistory(player).stream()
+                .flatMap(action -> action instanceof Banishment ? Stream.of((Banishment) action) : Stream.empty())
+                .anyMatch(ban -> !ban.expired());
     }
 
     @Override
-    public void banPlayer(String nickname, String reason, LocalDateTime issued, LocalDateTime expire) {
-        Queries.banPlayer(nickname, reason, issued, expire);
+    public void ban(String nickname, String issuer, String reason, LocalDateTime issued, LocalDateTime expire) {
+        Queries.ban(nickname, issuer, reason, issued, expire);
+    }
+
+    @Override
+    public void unban(String nickname, String issuer, LocalDateTime issued) {
+        Queries.unban(nickname, issuer, issued);
     }
 
 }

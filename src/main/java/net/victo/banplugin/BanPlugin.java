@@ -1,22 +1,21 @@
 package net.victo.banplugin;
 
+import net.threader.lib.sql.acessor.MySQLDBAcessor;
 import net.victo.banplugin.command.BanCommand;
-import net.victo.banplugin.database.MySQLConnector;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class BanPlugin extends JavaPlugin {
 
     private static BanPlugin instance;
 
-    private MySQLConnector connector;
+    private MySQLDBAcessor acessor;
 
     @Override
     public void onEnable() {
         instance = this;
 
-        this.connector = new MySQLConnector.Builder().url("localhost:3306/bans").plugin(this).build();
-        this.connector.connect();
+        this.acessor = new MySQLDBAcessor("localhost:3306/bans");
+        this.acessor.connect();;
 
         this.getCommand("ban").setExecutor(new BanCommand());
 
@@ -26,7 +25,7 @@ public class BanPlugin extends JavaPlugin {
         return instance;
     }
 
-    public MySQLConnector getDatabase() {
-        return connector;
+    public MySQLDBAcessor getDatabase() {
+        return acessor;
     }
 }
