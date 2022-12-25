@@ -24,6 +24,10 @@ public class BanPlugin extends JavaPlugin {
         this.serviceManager = new ServiceManager();
         this.serviceManager.getRegistry().register(IBanService.class, new SingleBanService());
 
+        // Could use a cache system which downloads only needed (and WHEN needed) data , but it would
+        // be too much over-engineering.
+        this.serviceManager.getService(IBanService.class).get().download();
+
         this.getCommand("ban").setExecutor(new BanCommand());
 
     }

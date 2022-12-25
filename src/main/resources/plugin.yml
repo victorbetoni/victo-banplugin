@@ -6,3 +6,5 @@ commands:
   ban:
     aliases:
       - tempban
+  unban:
+  history:

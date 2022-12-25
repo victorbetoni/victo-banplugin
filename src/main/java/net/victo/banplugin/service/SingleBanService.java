@@ -11,18 +11,16 @@ import org.bukkit.entity.Player;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class SingleBanService implements IBanService {
 
-    private Multimap<String, BanAction> cache = ArrayListMultimap.create();
+    private Multimap<String, BanAction> bans = ArrayListMultimap.create();
 
 
     @Override
-    public Multimap<String, BanAction> getCache() {
-        return cache;
+    public Multimap<String, BanAction> getBans() {
+        return bans;
     }
 
     /*
@@ -37,11 +35,11 @@ public class SingleBanService implements IBanService {
      * */
     @Override
     public List<BanAction> getHistory(String player) {
-        if (cache.containsKey(player)) {
-            return (List<BanAction>) cache.get(player);
+        if (bans.containsKey(player)) {
+            return (List<BanAction>) bans.get(player);
         }
         List<BanAction> banishments = Queries.FIND_BANS.apply(player);
-        cache.putAll(player, banishments);
+        bans.putAll(player, banishments);
         return banishments;
     }
 
@@ -73,16 +71,36 @@ public class SingleBanService implements IBanService {
 
     @Override
     public void ban(String player, String issuer, String reason, LocalDateTime issued, LocalDateTime expire) {
-        Banishment banishment = new Banishment(player, issuer, issued, reason, expire);
+        Banishment banishment = new Banishment(UUID.randomUUID(), player, issuer, issued, reason, expire);
         Queries.STORE_BAN.accept(banishment);
-        this.cache.put(player, banishment);
+        this.bans.put(player, banishment);
     }
 
+    /*
+    * Create a new Unban action and sets the latest ban as expired.
+    *
+    * @param player - The player to be unbanned
+    * @param issuer - The player who issued the unban
+    * @param issued - The time the unban was issued.
+    * */
     @Override
     public void unban(String player, String issuer, LocalDateTime issued) {
-        Unban unban = new Unban(player, issuer, issued);
-        Queries.STORE_UNBAN.accept(unban);
-        this.cache.put(player, unban);
+        this.getLatestIssuedActiveBan(player).ifPresent(ban -> {
+            if(!ban.expired()) {
+                Unban unban = new Unban(UUID.randomUUID(), player, issuer, issued);
+                Queries.UPDATE_BAN_EXPIRATION.accept(ban.getId(), issued);
+                Queries.STORE_UNBAN.accept(unban);
+                this.bans.put(player, unban);
+            }
+        });
+    }
+
+    /*
+    * Download all the data in the database and store it in the multimap.
+    * */
+    @Override
+    public void download() {
+        Queries.DOWNLOAD_BANS.accept(this.bans);
     }
 
 }

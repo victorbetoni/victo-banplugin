@@ -9,8 +9,8 @@ public class Banishment extends BanAction {
     private String reason;
     private LocalDateTime expiration;
 
-    public Banishment(String player, String issuer, LocalDateTime issuedOn, String reason, LocalDateTime expiration) {
-        super(player, issuer, issuedOn);
+    public Banishment(UUID uuid, String player, String issuer, LocalDateTime issuedOn, String reason, LocalDateTime expiration) {
+        super(uuid, player, issuer, issuedOn);
         this.reason = reason;
         this.expiration = expiration;
     }

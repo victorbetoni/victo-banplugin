@@ -10,8 +10,9 @@ public abstract class BanAction {
 
     protected UUID id;
 
-    public BanAction(String player, String issuer, LocalDateTime issuedOn) {
+    public BanAction(UUID uuid, String player, String issuer, LocalDateTime issuedOn) {
         this.player = player;
+        this.id = uuid;
         this.issuer = issuer;
         this.issuedOn = issuedOn;
     }

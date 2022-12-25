@@ -59,7 +59,7 @@ public class BanCommand implements CommandExecutor {
         try {
             expire = Utils.plusTime(input, now);
         } catch (NumberFormatException ex) {
-            sender.sendMessage(ChatColor.RED + "Enter a valid time unit.");
+            sender.sendMessage(ChatColor.RED + "Enter a valid duration.");
             return false;
         }
 
