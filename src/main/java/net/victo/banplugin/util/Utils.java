@@ -1,9 +1,12 @@
 package net.victo.banplugin.util;
 
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -11,38 +14,54 @@ public class Utils {
 
     public static final DateTimeFormatter DEFAULT_DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
-    public static LocalDateTime plusTime(String input, LocalDateTime time) {
-        Map<String, Integer> suffixToSeconds = Map.of(
-                "mo", 2592000,
-                "w", 604800,
-                "d", 86400,
-                "h", 3600,
-                "m", 60,
-                "s", 1);
-        for (String suffix : Arrays.asList("mo", "d", "w", "d", "h", "m", "s")) {
-            if (!input.contains(suffix)) {
+    public static LocalDateTime plusTime(String input, LocalDateTime time) throws NumberFormatException {
+        List<String> timeUnits = new ArrayList<>();
+        String current = "";
+        for (int i = 0; i < input.length(); i++) {
+            char ch = input.charAt(i);
+            if (i == input.length() - 1) {
+                current += ch;
+                timeUnits.add(current);
+                break;
+            }
+            if (Character.isLetter(ch) && Character.isDigit(input.charAt(i + 1))) {
+                current += ch;
+                timeUnits.add(current);
+                current = "";
                 continue;
             }
-            int index = input.indexOf(suffix);
-            if (index == 0) {
-                continue;
-            }
-            StringBuilder number = new StringBuilder("0");
-            for (int i = index - 1; i > 0; i--) {
-                if (Character.isDigit(input.charAt(i))) {
-                    number.append(input.charAt(i));
+            current += ch;
+        }
+        for (String unit : timeUnits) {
+            try {
+                if (unit.endsWith("mo")) {
+                    int months = Integer.parseInt(unit.substring(0, unit.length() - 2));
+                    time = time.plusMonths(months);
                     continue;
                 }
-                break;
+                int value = Integer.parseInt(unit.substring(0, unit.length() - 1));
+                switch (unit.charAt(unit.length() - 1)) {
+                    case 'w':
+                        time = time.plusWeeks(value);
+                        break;
+                    case 'd':
+                        time = time.plusDays(value);
+                        break;
+                    case 'm':
+                        time = time.plusMinutes(value);
+                        break;
+                    case 's':
+                        time = time.plusSeconds(value);
+                        break;
+                    default:
+                        throw new NumberFormatException("Not available time unit.");
+                }
+            } catch (NumberFormatException ex) {
+                throw ex;
             }
-            if(index == input.length() - 1) {
-                break;
-            }
-            input = input.substring(index + 1, input.length());
-            time = time.plusSeconds((long) suffixToSeconds.get(suffix) * Integer.parseInt(number.toString()));
+
         }
         return time;
     }
-
 
 }

@@ -4,6 +4,7 @@ import net.threader.lib.gui.GUIItem;
 import net.threader.lib.gui.InventoryGUI;
 import net.threader.lib.util.ItemStackBuilder;
 import net.victo.banplugin.BanPlugin;
+import net.victo.banplugin.domain.IBanService;
 import net.victo.banplugin.model.BanAction;
 import net.victo.banplugin.model.Banishment;
 import net.victo.banplugin.service.SingleBanService;
@@ -40,7 +41,7 @@ public class HistoryGUI {
     public void buildPages() {
         AtomicInteger count = new AtomicInteger(0);
         List<BanAction> currentPageActions = new ArrayList<>();
-        for (BanAction action : SingleBanService.INSTANCE.getHistory(holder.getName())) {
+        for (BanAction action : BanPlugin.instance().getServiceManager().getService(IBanService.class).get().getHistory(holder.getName())) {
             if (count.incrementAndGet() <= 45) {
                 currentPageActions.add(action);
                 continue;
