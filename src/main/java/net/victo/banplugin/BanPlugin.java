@@ -25,7 +25,7 @@ public class BanPlugin extends JavaPlugin {
         instance = this;
         this.saveDefaultConfig();
 
-        String dbUrl = String.format("jdbc:mysql://%s:%s@%s:%s/%s",
+        String dbUrl = String.format("jdbc:mysql://%s:%s/%s?user=%s&password=%s",
                 this.getConfig().get("database.username"),
                 this.getConfig().get("database.password"),
                 this.getConfig().get("database.host"),
