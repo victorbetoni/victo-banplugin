@@ -32,7 +32,7 @@ public class BanPlugin extends JavaPlugin {
                 this.getConfig().get("database.port"),
                 this.getConfig().get("database.db"));
 
-        this.acessor = new MySQLDBAcessor(dbUrl);
+        this.acessor = new MySQLDBAcessor(this, dbUrl);
         this.acessor.connect();
 
         this.serviceManager = new ServiceManager();
