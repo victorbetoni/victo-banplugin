@@ -31,11 +31,11 @@ public class Queries {
                 switch (rs.getString("action")) {
                     case "ban":
                         cache.put(target, new Banishment(
-                            uid,
-                            target,
-                            issuer, issuedOn,
-                            rs.getString("reason"),
-                            LocalDateTime.parse(rs.getString("expire_on"), Utils.DEFAULT_DATE_FORMATTER)));
+                                uid,
+                                target,
+                                issuer, issuedOn,
+                                rs.getString("reason"),
+                                LocalDateTime.parse(rs.getString("expire_on"), Utils.DEFAULT_DATE_FORMATTER)));
                         break;
                     case "unban":
                         cache.put(target, new Unban(uid, target, issuer, issuedOn));
@@ -62,13 +62,17 @@ public class Queries {
                 LocalDateTime issuedOn = LocalDateTime.parse(result.getString("issued_on"), Utils.DEFAULT_DATE_FORMATTER);
 
                 switch (result.getString("action")) {
-                    case "ban" -> history.add(new Banishment(
-                            uid,
-                            target,
-                            issuer, issuedOn,
-                            result.getString("reason"),
-                            LocalDateTime.parse(result.getString("expire_on"), Utils.DEFAULT_DATE_FORMATTER)));
-                    case "unban" -> history.add(new Unban(uid, target, issuer, issuedOn));
+                    case "ban":
+                        history.add(new Banishment(
+                                uid,
+                                target,
+                                issuer, issuedOn,
+                                result.getString("reason"),
+                                LocalDateTime.parse(result.getString("expire_on"), Utils.DEFAULT_DATE_FORMATTER)));
+                        break;
+                    case "unban":
+                        history.add(new Unban(uid, target, issuer, issuedOn));
+                        break;
                 }
             }
         } catch (SQLException ex) {
