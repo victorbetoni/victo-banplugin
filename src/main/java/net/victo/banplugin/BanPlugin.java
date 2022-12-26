@@ -6,8 +6,10 @@ import net.victo.banplugin.command.BanCommand;
 import net.victo.banplugin.command.HistoryCommand;
 import net.victo.banplugin.command.UnbanCommand;
 import net.victo.banplugin.domain.IBanService;
+import net.victo.banplugin.listener.PlayerJoinListener;
 import net.victo.banplugin.model.Unban;
 import net.victo.banplugin.service.SingleBanService;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class BanPlugin extends JavaPlugin {
@@ -20,12 +22,6 @@ public class BanPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-
-        /*
-        * TODO:
-        * - Usar API de mensagem
-        * - Adicionar comando para history do player
-        * */
 
         this.acessor = new MySQLDBAcessor("localhost:3306/bans");
         this.acessor.connect();
@@ -41,6 +37,7 @@ public class BanPlugin extends JavaPlugin {
         this.getCommand("ban").setExecutor(new BanCommand());
         this.getCommand("history").setExecutor(new HistoryCommand());
 
+        Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), this);
     }
 
     public ServiceManager getServiceManager() {
