@@ -12,6 +12,7 @@ import net.victo.banplugin.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,13 @@ public class HistoryGUI {
         this.buildPages();
     }
 
+    public AtomicInteger getIndex() {
+        return index;
+    }
+
+    public List<Page> getPages() {
+        return pages;
+    }
 
     /*
      * Build the GUI pages based on the target player ban/unban history
@@ -123,7 +131,7 @@ public class HistoryGUI {
          * */
         public InventoryGUI open() {
             AtomicInteger index = new AtomicInteger(0);
-            GUIItem[] items = new GUIItem[actions.size()];
+            GUIItem[] items = new GUIItem[actions.size() + 9];
             actions.forEach(action -> {
                 String title = action instanceof Banishment
                         ? ChatColor.RED + "Player banned"
@@ -159,10 +167,31 @@ public class HistoryGUI {
                         (p, e) -> {
                         });
             });
+
+            ItemStack backStack = ItemStackBuilder.factory().type(Material.ARROW)
+                    .title(ChatColor.YELLOW + "⮘ Previous").build();
+            items[index.getAndIncrement()] = new GUIItem(backStack, 45, (e, p) -> parent.previousPage());
+
+            ItemStack nextStack = ItemStackBuilder.factory().type(Material.ARROW)
+                    .title(ChatColor.YELLOW + "Next ⮚").build();
+            items[index.getAndIncrement()] = new GUIItem(nextStack, 53, (e, p) -> parent.previousPage());
+
+            ItemStack closeStack = ItemStackBuilder.factory().type(Material.REDSTONE_BLOCK)
+                    .title(ChatColor.RED + "Cancel ❌").build();
+            items[index.getAndIncrement()] = new GUIItem(closeStack, 49, (event, player) -> player.closeInventory());
+
+            ItemStack foo = ItemStackBuilder.factory().type(Material.BLACK_STAINED_GLASS_PANE).title("").build();
+            items[index.getAndIncrement()] = new GUIItem(foo.clone(), 46, (e, p) -> {});
+            items[index.getAndIncrement()] = new GUIItem(foo.clone(), 47, (e, p) -> {});
+            items[index.getAndIncrement()] = new GUIItem(foo.clone(), 48, (e, p) -> {});
+            items[index.getAndIncrement()] = new GUIItem(foo.clone(), 50, (e, p) -> {});
+            items[index.getAndIncrement()] = new GUIItem(foo.clone(), 51, (e, p) -> {});
+            items[index.getAndIncrement()] = new GUIItem(foo.clone(), 52, (e, p) -> {});
+
             return new InventoryGUI(
                     BanPlugin.instance(),
                     parent.getHolder(),
-                    parent.getHolder().getName() + "'s History",
+                    parent.getHolder().getName() + "'s History (" + parent.getIndex().get() + "/" + parent.getPages().size() + ")",
                     InventoryGUI.Rows.SIX,
                     items
             );
