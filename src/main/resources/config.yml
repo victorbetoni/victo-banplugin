@@ -1,3 +1,10 @@
+database:
+  host: 'localhost'
+  port: '3306'
+  db: 'bans'
+  username: 'root'
+  password: 'admin'
+
 messages:
   specify_player: "&cSpecify a player."
   player_banned: "&aSuccessfully banned player {player}."

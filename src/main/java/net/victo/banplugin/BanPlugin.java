@@ -23,8 +23,16 @@ public class BanPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        this.saveDefaultConfig();
 
-        this.acessor = new MySQLDBAcessor("localhost:3306/bans");
+        String dbUrl = String.format("jdbc:mysql://%s:%s@%s:%s/%s",
+                this.getConfig().get("database.username"),
+                this.getConfig().get("database.password"),
+                this.getConfig().get("database.host"),
+                this.getConfig().get("database.port"),
+                this.getConfig().get("database.db"));
+
+        this.acessor = new MySQLDBAcessor(dbUrl);
         this.acessor.connect();
 
         this.serviceManager = new ServiceManager();
