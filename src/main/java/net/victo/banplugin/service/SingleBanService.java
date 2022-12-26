@@ -2,11 +2,13 @@ package net.victo.banplugin.service;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import net.victo.banplugin.api.event.PlayerBannedEvent;
 import net.victo.banplugin.database.Queries;
 import net.victo.banplugin.domain.IBanService;
 import net.victo.banplugin.model.BanAction;
 import net.victo.banplugin.model.Banishment;
 import net.victo.banplugin.model.Unban;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.time.LocalDateTime;
@@ -72,6 +74,9 @@ public class SingleBanService implements IBanService {
     @Override
     public void ban(String player, String issuer, String reason, LocalDateTime issued, LocalDateTime expire) {
         Banishment banishment = new Banishment(UUID.randomUUID(), player, issuer, issued, reason, expire);
+
+        Bukkit.getPluginManager().callEvent(new PlayerBannedEvent(banishment));
+
         Queries.STORE_BAN.accept(banishment);
         this.bans.put(player, banishment);
     }

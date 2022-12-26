@@ -6,6 +6,7 @@ import net.victo.banplugin.command.BanCommand;
 import net.victo.banplugin.command.HistoryCommand;
 import net.victo.banplugin.command.UnbanCommand;
 import net.victo.banplugin.domain.IBanService;
+import net.victo.banplugin.listener.PlayerBannedListener;
 import net.victo.banplugin.listener.PlayerJoinListener;
 import net.victo.banplugin.model.Unban;
 import net.victo.banplugin.service.SingleBanService;
@@ -38,6 +39,7 @@ public class BanPlugin extends JavaPlugin {
         this.getCommand("history").setExecutor(new HistoryCommand());
 
         Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerBannedListener(), this);
     }
 
     public ServiceManager getServiceManager() {
