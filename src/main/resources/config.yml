@@ -9,3 +9,7 @@ messages:
   invalid_duration: "&cEnter a valid ban duration."
   not_available: "&cThe ban service isn't available yet."
   player_cmd: "&cCommand only available for player."
+  you_are_banned: "&cYou are banned"
+  reason_info: "&eReason: &7{reason}"
+  end_in: "Ends in {months} months, {days} days, {hours} hours, {minutes} minutes and {seconds} seconds"
+

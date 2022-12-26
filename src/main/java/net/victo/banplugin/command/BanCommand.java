@@ -14,6 +14,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Map;
 import java.util.Optional;
 
 public class BanCommand implements CommandExecutor {
@@ -60,10 +62,16 @@ public class BanCommand implements CommandExecutor {
         String input = args[1];
         String reason = args.length == 4 ? args[3] : "";
 
-        LocalDateTime expire = null;
+        LocalDateTime expire = now;
         try {
-            expire = Utils.plusTime(input, now);
-        } catch (NumberFormatException ex) {
+            Map<ChronoUnit, Long> units = Utils.parseDuration(input);
+            expire = expire.plusMonths(units.get(ChronoUnit.MONTHS));
+            expire = expire.plusWeeks(units.get(ChronoUnit.WEEKS));
+            expire = expire.plusDays(units.get(ChronoUnit.DAYS));
+            expire = expire.plusHours(units.get(ChronoUnit.HOURS));
+            expire = expire.plusMinutes(units.get(ChronoUnit.MINUTES));
+            expire = expire.plusSeconds(units.get(ChronoUnit.SECONDS));
+        } catch (Exception ex) {
             sender.sendMessage(Message.Util.of("invalid_duration", BanPlugin.instance()));
             return false;
         }

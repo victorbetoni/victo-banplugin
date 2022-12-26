@@ -7,7 +7,6 @@ import net.victo.banplugin.BanPlugin;
 import net.victo.banplugin.domain.IBanService;
 import net.victo.banplugin.model.BanAction;
 import net.victo.banplugin.model.Banishment;
-import net.victo.banplugin.service.SingleBanService;
 import net.victo.banplugin.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -126,8 +125,8 @@ public class HistoryGUI {
         }
 
         /*
-         * Build the action (Ban/Unban) ItemStack based on its fields.
-         * If the information is empty or null, it wont be displayed.
+         * Build and return the player's bans/unbans history GUI
+         *
          * */
         public InventoryGUI open() {
             AtomicInteger index = new AtomicInteger(0);

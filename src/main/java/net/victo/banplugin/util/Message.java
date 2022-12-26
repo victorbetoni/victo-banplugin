@@ -36,6 +36,11 @@ public class Message {
         lines.forEach(line -> player.sendMessage(ChatColor.translateAlternateColorCodes('&', replaceVariables(line))));
     }
 
+    @Override
+    public String toString() {
+        return String.join("\n", lines);
+    }
+
     public String replaceVariables(String line) {
         AtomicReference<String> currentLine = new AtomicReference<>(line);
         variables.entrySet().forEach(entry -> {
