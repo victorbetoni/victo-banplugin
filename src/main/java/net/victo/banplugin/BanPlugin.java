@@ -3,6 +3,7 @@ package net.victo.banplugin;
 import net.threader.lib.service.ServiceManager;
 import net.threader.lib.sql.acessor.MySQLDBAcessor;
 import net.victo.banplugin.command.BanCommand;
+import net.victo.banplugin.command.HistoryCommand;
 import net.victo.banplugin.command.UnbanCommand;
 import net.victo.banplugin.domain.IBanService;
 import net.victo.banplugin.model.Unban;
@@ -38,6 +39,7 @@ public class BanPlugin extends JavaPlugin {
 
         this.getCommand("unban").setExecutor(new UnbanCommand());
         this.getCommand("ban").setExecutor(new BanCommand());
+        this.getCommand("history").setExecutor(new HistoryCommand());
 
     }
 

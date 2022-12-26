@@ -22,14 +22,17 @@ public class HistoryGUI {
     private AtomicInteger index = new AtomicInteger(0);
     private List<Page> pages = new ArrayList<>();
     private Player holder;
+    private String target;
 
-    public HistoryGUI(Player holder) {
+    public HistoryGUI(Player holder, String target) {
         this.holder = holder;
+        this.target = target;
         this.buildPages();
     }
 
-    public HistoryGUI(Player holder, int currentIndex) {
+    public HistoryGUI(Player holder, String target, int currentIndex) {
         this.holder = holder;
+        this.target = target;
         this.index = new AtomicInteger(currentIndex);
         this.buildPages();
     }
@@ -41,7 +44,7 @@ public class HistoryGUI {
     public void buildPages() {
         AtomicInteger count = new AtomicInteger(0);
         List<BanAction> currentPageActions = new ArrayList<>();
-        for (BanAction action : BanPlugin.instance().getServiceManager().getService(IBanService.class).get().getHistory(holder.getName())) {
+        for (BanAction action : BanPlugin.instance().getServiceManager().getService(IBanService.class).get().getHistory(target)) {
             if (count.incrementAndGet() <= 45) {
                 currentPageActions.add(action);
                 continue;
@@ -96,7 +99,7 @@ public class HistoryGUI {
      * */
     public void reopen() {
         holder.closeInventory();
-        new HistoryGUI(holder, index.get()).openCurrentPage();
+        new HistoryGUI(holder, target, index.get()).openCurrentPage();
     }
 
     public Player getHolder() {
