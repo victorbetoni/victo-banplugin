@@ -1,8 +1,10 @@
 package net.victo.banplugin.command;
 
+import net.threader.lib.text.Text;
 import net.victo.banplugin.BanPlugin;
 import net.victo.banplugin.domain.IBanService;
 import net.victo.banplugin.service.SingleBanService;
+import net.victo.banplugin.util.Message;
 import net.victo.banplugin.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -20,25 +22,27 @@ public class BanCommand implements CommandExecutor {
         Optional<IBanService> optService = BanPlugin.instance().getServiceManager().getService(IBanService.class);
 
         if(optService.isEmpty()) {
-            sender.sendMessage(ChatColor.RED + "Ban service not available");
+            sender.sendMessage(Message.Util.of("not_available", BanPlugin.instance()));
             return false;
         }
 
         IBanService service = optService.get();
         if(args.length < 1) {
-            sender.sendMessage(ChatColor.RED + "Specify a player.");
+            sender.sendMessage(Message.Util.of("specify_player", BanPlugin.instance()));
             return false;
         }
 
         Player player = Bukkit.getPlayer(args[0]);
 
         if(player == null) {
-            sender.sendMessage(ChatColor.RED + "The informed player is offline.");
+            new Message.Builder().fromConfig("player_offline", BanPlugin.instance())
+                    .addVariable("player", args[0]).build().send(sender);
             return false;
         }
 
         if(service.hasActiveBan(player)) {
-            sender.sendMessage(ChatColor.RED + "Player is already banned.");
+            new Message.Builder().fromConfig("already_banned", BanPlugin.instance())
+                    .addVariable("player", player.getName()).build().send(sender);
             return false;
         }
 
@@ -48,7 +52,8 @@ public class BanCommand implements CommandExecutor {
 
         if(args.length == 1) {
             service.ban(player.getName(), issuer, "", now, null);
-            sender.sendMessage(ChatColor.GREEN + "Player banned.");
+            new Message.Builder().fromConfig("player_banned", BanPlugin.instance())
+                    .addVariable("player", player.getName()).build().send(sender);
             return false;
         }
 
@@ -59,7 +64,7 @@ public class BanCommand implements CommandExecutor {
         try {
             expire = Utils.plusTime(input, now);
         } catch (NumberFormatException ex) {
-            sender.sendMessage(ChatColor.RED + "Enter a valid duration.");
+            sender.sendMessage(Message.Util.of("invalid_duration", BanPlugin.instance()));
             return false;
         }
 
