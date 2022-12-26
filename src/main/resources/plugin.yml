@@ -3,6 +3,7 @@ main: net.victo.banplugin.BanPlugin
 version: 1.0
 commands:
   ban:
+    usage: 'ban <player> [duration] [reason]'
     aliases:
       - tempban
   unban:
