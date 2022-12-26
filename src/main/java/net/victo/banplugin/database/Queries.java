@@ -29,13 +29,17 @@ public class Queries {
                 LocalDateTime issuedOn = LocalDateTime.parse(rs.getString("issued_on"), Utils.DEFAULT_DATE_FORMATTER);
 
                 switch (rs.getString("action")) {
-                    case "ban" -> cache.put(target, new Banishment(
+                    case "ban":
+                        cache.put(target, new Banishment(
                             uid,
                             target,
                             issuer, issuedOn,
                             rs.getString("reason"),
                             LocalDateTime.parse(rs.getString("expire_on"), Utils.DEFAULT_DATE_FORMATTER)));
-                    case "unban" -> cache.put(target, new Unban(uid, target, issuer, issuedOn));
+                        break;
+                    case "unban":
+                        cache.put(target, new Unban(uid, target, issuer, issuedOn));
+                        break;
                 }
             }
         } catch (SQLException ex) {

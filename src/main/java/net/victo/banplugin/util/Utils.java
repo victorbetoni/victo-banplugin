@@ -52,11 +52,20 @@ public class Utils {
                 }
                 long value = Long.parseLong(unit.substring(0, unit.length() - 1));
                 switch (unit.charAt(unit.length() - 1)) {
-                    case 'w' -> units.put(ChronoUnit.WEEKS, value);
-                    case 'd' -> units.put(ChronoUnit.DAYS, value);
-                    case 'm' -> units.put(ChronoUnit.MINUTES, value);
-                    case 's' -> units.put(ChronoUnit.SECONDS, value);
-                    default -> throw new NumberFormatException("Not available time unit.");
+                    case 'w':
+                        units.put(ChronoUnit.WEEKS, value);
+                        break;
+                    case 'd':
+                        units.put(ChronoUnit.DAYS, value);
+                        break;
+                    case 'm':
+                        units.put(ChronoUnit.MINUTES, value);
+                        break;
+                    case 's':
+                        units.put(ChronoUnit.SECONDS, value);
+                        break;
+                    default:
+                        throw new NumberFormatException("Not available time unit.");
                 }
             } catch (Exception ex) {
                 throw ex;
@@ -82,10 +91,10 @@ public class Utils {
         Map<ChronoUnit, Long> result = new LinkedHashMap<>();
         long restMillis = diffMillis;
 
-        for(ChronoUnit unit : units) {
+        for (ChronoUnit unit : units) {
             long duration = unit.getDuration().toMillis();
             long delta = restMillis / duration;
-            restMillis = restMillis - (delta*duration);
+            restMillis = restMillis - (delta * duration);
             result.put(unit, delta);
         }
 
