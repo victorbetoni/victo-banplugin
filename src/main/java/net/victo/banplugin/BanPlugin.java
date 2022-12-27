@@ -8,7 +8,6 @@ import net.victo.banplugin.command.UnbanCommand;
 import net.victo.banplugin.domain.IBanService;
 import net.victo.banplugin.listener.PlayerBannedListener;
 import net.victo.banplugin.listener.PlayerJoinListener;
-import net.victo.banplugin.model.Unban;
 import net.victo.banplugin.service.SingleBanService;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,12 +24,14 @@ public class BanPlugin extends JavaPlugin {
         instance = this;
         this.saveDefaultConfig();
 
-        String dbUrl = String.format("jdbc:mysql://%s:%s/%s?user=%s&password=%s",
+        String dbUrl = String.format("jdbc:mysql://%s:%s/%s?user=%s&password=%s&useSSL=false",
                 this.getConfig().get("database.host"),
                 this.getConfig().get("database.port"),
                 this.getConfig().get("database.db"),
                 this.getConfig().get("database.username"),
                 this.getConfig().get("database.password"));
+
+        System.out.println(dbUrl);
 
         this.acessor = new MySQLDBAcessor(this, dbUrl);
         this.acessor.connect();
