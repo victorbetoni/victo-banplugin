@@ -7,6 +7,8 @@ import net.victo.banplugin.BanPlugin;
 import net.victo.banplugin.domain.IBanService;
 import net.victo.banplugin.model.BanAction;
 import net.victo.banplugin.model.Banishment;
+import net.victo.banplugin.model.Unban;
+import net.victo.banplugin.util.Message;
 import net.victo.banplugin.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -15,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -134,33 +137,36 @@ public class HistoryGUI {
             AtomicInteger index = new AtomicInteger(0);
             GUIItem[] items = new GUIItem[actions.size() + 9];
             actions.forEach(action -> {
-                String title = action instanceof Banishment
-                        ? ChatColor.RED + "Player banned"
-                        : ChatColor.GREEN + "Player unbanned";
                 ItemStackBuilder builder = ItemStackBuilder.factory().type(Material.PAINTING);
-                builder.title(title);
-                builder.lore(
-                        "",
-                        ChatColor.GRAY + "Player: " + ChatColor.YELLOW + action.getPlayer(),
-                        ChatColor.GRAY + "Issued on: " + ChatColor.YELLOW + Utils.READABLE_DATE_FORMATTER.format(action.getIssuedOn()),
-                        ChatColor.GRAY + "Issued by: " + ChatColor.YELLOW + action.getIssuer(),
-                        ""
-                );
-
                 if (action instanceof Banishment) {
                     Banishment ban = (Banishment) action;
-                    if (!ban.getReason().equals("")) {
-                        builder.lore(ChatColor.GRAY + "Reason: " + ChatColor.YELLOW + ban.getReason());
-                    }
                     String expiration = ban.getExpiration() != null
                             ? ChatColor.YELLOW + Utils.READABLE_DATE_FORMATTER.format(ban.getExpiration())
                             : ChatColor.YELLOW + "Never";
-                    builder.lore(ChatColor.GRAY + "Expiration: " + expiration);
-                    builder.lore("");
-                    if(ban.getExpiration() != null) {
-                        String expired = ban.expired() ? ChatColor.GREEN + "Yes" : ChatColor.RED + "No";
-                        builder.lore(ChatColor.GRAY + "Expired: " + expired);
-                    }
+                    String expired = ban.expired() ? ChatColor.GREEN + "Yes" : ChatColor.RED + "No";
+                    List<String> lines = new Message.Builder().fromConfig("gui.ban_item", BanPlugin.instance())
+                            .addVariable("player", action.getPlayer())
+                            .addVariable("issuer", action.getIssuer())
+                            .addVariable("issued_on", Utils.READABLE_DATE_FORMATTER.format(action.getIssuedOn()))
+                            .addVariable("reason", ban.getReason())
+                            .addVariable("expiration", expiration)
+                            .addVariable("expired", expired)
+                            .build().getLines();
+                    builder.title(lines.get(0));
+                    Iterator<String> it = lines.iterator();
+                    it.next();
+                    it.forEachRemaining(builder::lore);
+
+                } else {
+                    List<String> lines = new Message.Builder().fromConfig("gui.unban_item", BanPlugin.instance())
+                            .addVariable("player", action.getPlayer())
+                            .addVariable("issuer", action.getIssuer())
+                            .addVariable("issued_on", Utils.READABLE_DATE_FORMATTER.format(action.getIssuedOn()))
+                            .build().getLines();
+                    builder.title(lines.get(0));
+                    Iterator<String> it = lines.iterator();
+                    it.next();
+                    it.forEachRemaining(builder::lore);
                 }
                 items[index.get()] = new GUIItem(
                         builder.build(),

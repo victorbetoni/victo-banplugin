@@ -5,7 +5,7 @@ database:
   username: 'root'
   password: 'admin'
 
-messages:
+message:
   specify_player: "&cSpecify a player."
   player_banned: "&aSuccessfully banned player {player}."
   player_unbanned: "&aSuccessfully unbanned player {player}."
@@ -19,4 +19,21 @@ messages:
   you_are_banned: "&cYou are banned"
   reason_info: "&cReason: {reason}"
   end_in: "&cEnds in {months} months, {days} days, {hours} hours, {minutes} minutes and {seconds} seconds"
+  gui:
+    ban_item:
+      - '&cPlayer banned'
+      - ''
+      - '&7Player: &e{player}'
+      - '&7Issued on: &e{issued_on}'
+      - '&7Issued by: &e{issuer}'
+      - ''
+      - '&7Reason: &e{reason}'
+      - '&7Expiration: &e{expiration}'
+      - '&7Expired: {expired}'
+    unban_item:
+      - '&aPlayer unbanned'
+      - ''
+      - '&7Player: &e{player}'
+      - '&7Issued on: &e{issued_on}'
+      - '&7Issued by: &e{issuer}'
 

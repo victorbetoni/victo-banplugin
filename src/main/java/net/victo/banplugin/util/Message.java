@@ -21,8 +21,8 @@ public class Message {
     private Map<String, Object> variables;
 
     public Message(List<String> lines, Map<String, Object> variables) {
-        this.lines = lines;
         this.variables = variables;
+        this.lines = lines.stream().map(this::replaceVariables).collect(Collectors.toList());
     }
 
     public List<String> getLines() {
@@ -34,7 +34,7 @@ public class Message {
     }
 
     public void send(CommandSender player) {
-        lines.forEach(line -> player.sendMessage(ChatColor.translateAlternateColorCodes('&', replaceVariables(line))));
+        lines.forEach(line -> player.sendMessage(ChatColor.translateAlternateColorCodes('&', line)));
     }
 
     @Override
