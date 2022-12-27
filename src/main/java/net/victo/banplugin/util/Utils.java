@@ -16,7 +16,7 @@ public class Utils {
     /*
      * The standard date formatter used in the entire project.
      * */
-    public static final DateTimeFormatter DEFAULT_DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+    public static final DateTimeFormatter DEFAULT_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     /*
      * Parse the ban duration input provided by the player and return a map containing
