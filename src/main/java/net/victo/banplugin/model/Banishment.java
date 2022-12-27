@@ -24,6 +24,6 @@ public class Banishment extends BanAction {
     }
 
     public boolean expired() {
-        return LocalDateTime.now().isAfter(expiration);
+        return expiration != null && LocalDateTime.now().isAfter(expiration);
     }
 }
