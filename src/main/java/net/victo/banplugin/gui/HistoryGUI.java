@@ -84,6 +84,7 @@ public class HistoryGUI {
     public void previousPage() {
         if (index.get() - 1 < 0) {
             index.set(pages.size() - 1);
+            return;
         }
         index.set(index.get() - 1);
     }
@@ -99,6 +100,7 @@ public class HistoryGUI {
             openCurrentPage();
             return;
         }
+        holder.closeInventory();
         pages.get(index.get()).buildInventory().openInventory(holder);
     }
 
@@ -106,7 +108,6 @@ public class HistoryGUI {
      * Close the player current inventory and open a new HistoryGUI in the current index.
      * */
     public void reopen() {
-        holder.closeInventory();
         new HistoryGUI(holder, target, index.get()).openCurrentPage();
     }
 
@@ -141,7 +142,7 @@ public class HistoryGUI {
                 builder.lore(
                         "",
                         ChatColor.GRAY + "Player: " + ChatColor.YELLOW + action.getPlayer(),
-                        ChatColor.GRAY + "Issued on: " + ChatColor.YELLOW + Utils.DEFAULT_DATE_FORMATTER.format(action.getIssuedOn()),
+                        ChatColor.GRAY + "Issued on: " + ChatColor.YELLOW + Utils.READABLE_DATE_FORMATTER.format(action.getIssuedOn()),
                         ChatColor.GRAY + "Issued by: " + ChatColor.YELLOW + action.getIssuer(),
                         ""
                 );
@@ -152,7 +153,7 @@ public class HistoryGUI {
                         builder.lore(ChatColor.GRAY + "Reason: " + ChatColor.YELLOW + ban.getReason());
                     }
                     String expiration = ban.getExpiration() != null
-                            ? ChatColor.YELLOW + Utils.DEFAULT_DATE_FORMATTER.format(ban.getExpiration())
+                            ? ChatColor.YELLOW + Utils.READABLE_DATE_FORMATTER.format(ban.getExpiration())
                             : ChatColor.YELLOW + "Never";
                     builder.lore(ChatColor.GRAY + "Expiration: " + expiration);
                     builder.lore("");
@@ -170,17 +171,23 @@ public class HistoryGUI {
 
             ItemStack backStack = ItemStackBuilder.factory().type(Material.ARROW)
                     .title(ChatColor.YELLOW + "⮘ Previous").build();
-            items[index.getAndIncrement()] = new GUIItem(backStack, 45, (e, p) -> parent.previousPage());
+            items[index.getAndIncrement()] = new GUIItem(backStack, 45, (e, p) -> {
+                parent.previousPage();
+                parent.openCurrentPage();
+            });
 
             ItemStack nextStack = ItemStackBuilder.factory().type(Material.ARROW)
                     .title(ChatColor.YELLOW + "Next ⮚").build();
-            items[index.getAndIncrement()] = new GUIItem(nextStack, 53, (e, p) -> parent.previousPage());
+            items[index.getAndIncrement()] = new GUIItem(nextStack, 53, (e, p) -> {
+                parent.nextPage();
+                parent.openCurrentPage();
+            });
 
             ItemStack closeStack = ItemStackBuilder.factory().type(Material.REDSTONE_BLOCK)
                     .title(ChatColor.RED + "Cancel ❌").build();
             items[index.getAndIncrement()] = new GUIItem(closeStack, 49, (event, player) -> player.closeInventory());
 
-            ItemStack foo = ItemStackBuilder.factory().type(Material.STAINED_GLASS_PANE).title("").build();
+            ItemStack foo = ItemStackBuilder.factory().type(Material.STAINED_GLASS_PANE).title(" ").build();
             items[index.getAndIncrement()] = new GUIItem(foo.clone(), 46, (e, p) -> {});
             items[index.getAndIncrement()] = new GUIItem(foo.clone(), 47, (e, p) -> {});
             items[index.getAndIncrement()] = new GUIItem(foo.clone(), 48, (e, p) -> {});
@@ -191,7 +198,7 @@ public class HistoryGUI {
             return new InventoryGUI(
                     BanPlugin.instance(),
                     parent.getHolder(),
-                    parent.getHolder().getName() + "'s History (" + parent.getIndex().get() + "/" + parent.getPages().size() + ")",
+                    parent.getHolder().getName() + "'s History (" + (parent.getIndex().get() + 1) + "/" + parent.getPages().size() + ")",
                     InventoryGUI.Rows.SIX,
                     items
             );

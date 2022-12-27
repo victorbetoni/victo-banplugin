@@ -15,9 +15,11 @@ import java.util.stream.Stream;
 public class Utils {
 
     /*
-     * The standard date formatter used in the entire project.
+     * The standard date formatter used in the project database.
      * */
     public static final DateTimeFormatter DEFAULT_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+
+    public static final DateTimeFormatter READABLE_DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
     /*
      * Parse the ban duration input provided by the player and return a map containing
