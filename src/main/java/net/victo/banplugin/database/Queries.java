@@ -84,15 +84,16 @@ public class Queries {
     public static Consumer<Banishment> STORE_BAN = (banishment) -> {
         try (PreparedStatement statement = BanPlugin.instance().getDatabase().getConnection().prepareStatement(
                 "INSERT INTO ban_log VALUES (?, ?, ?, ?, ?, ?)")) {
-            statement.setString(1, banishment.getPlayer());
-            statement.setString(2, banishment.getIssuer());
-            statement.setString(3, banishment.getReason());
-            statement.setString(4, "ban");
-            statement.setString(5, banishment.getIssuedOn().format(Utils.DEFAULT_DATE_FORMATTER));
+            statement.setString(1, banishment.getId().toString());
+            statement.setString(2, banishment.getPlayer());
+            statement.setString(3, banishment.getIssuer());
+            statement.setString(4, banishment.getReason());
+            statement.setString(5, "ban");
+            statement.setString(6, banishment.getIssuedOn().format(Utils.DEFAULT_DATE_FORMATTER));
             if(banishment.getExpiration() == null) {
-                statement.setString(6, null);
+                statement.setString(7, null);
             } else {
-                statement.setString(6, banishment.getExpiration().format(Utils.DEFAULT_DATE_FORMATTER));
+                statement.setString(7, banishment.getExpiration().format(Utils.DEFAULT_DATE_FORMATTER));
             }
             statement.execute();
         } catch (SQLException ex) {
@@ -103,10 +104,11 @@ public class Queries {
     public static Consumer<Unban> STORE_UNBAN = (unban) -> {
         try (PreparedStatement statement = BanPlugin.instance().getDatabase().getConnection().prepareStatement(
                 "INSERT INTO ban_log (player, issuer, action, issued_on) VALUES (?, ?, ?, ?)")) {
-            statement.setString(1, unban.getPlayer());
-            statement.setString(2, unban.getIssuer());
-            statement.setString(3, "unban");
-            statement.setString(4, unban.getIssuedOn().format(Utils.DEFAULT_DATE_FORMATTER));
+            statement.setString(1, unban.getId().toString());
+            statement.setString(2, unban.getPlayer());
+            statement.setString(3, unban.getIssuer());
+            statement.setString(5, "unban");
+            statement.setString(6, unban.getIssuedOn().format(Utils.DEFAULT_DATE_FORMATTER));
             statement.execute();
         } catch (SQLException ex) {
             ex.printStackTrace();
