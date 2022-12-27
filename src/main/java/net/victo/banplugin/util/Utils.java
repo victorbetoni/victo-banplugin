@@ -125,7 +125,7 @@ public class Utils {
         }
 
         String message = banned;
-        message = !reason.equals("") ? message + "\n" + reason : message;
+        message = !ban.getReason().equals("") ? message + "\n" + reason : message;
         message = !endsIn.equals("") ? message + "\n" + endsIn : message;
 
         return message;

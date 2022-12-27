@@ -83,7 +83,7 @@ public class Queries {
 
     public static Consumer<Banishment> STORE_BAN = (banishment) -> {
         try (PreparedStatement statement = BanPlugin.instance().getDatabase().getConnection().prepareStatement(
-                "INSERT INTO ban_log VALUES (?, ?, ?, ?, ?, ?)")) {
+                "INSERT INTO ban_log VALUES (?, ?, ?, ?, ?, ?, ?)")) {
             statement.setString(1, banishment.getId().toString());
             statement.setString(2, banishment.getPlayer());
             statement.setString(3, banishment.getIssuer());
@@ -103,12 +103,12 @@ public class Queries {
 
     public static Consumer<Unban> STORE_UNBAN = (unban) -> {
         try (PreparedStatement statement = BanPlugin.instance().getDatabase().getConnection().prepareStatement(
-                "INSERT INTO ban_log (player, issuer, action, issued_on) VALUES (?, ?, ?, ?)")) {
+                "INSERT INTO ban_log (id, player, issuer, action, issued_on) VALUES (?, ?, ?, ?)")) {
             statement.setString(1, unban.getId().toString());
             statement.setString(2, unban.getPlayer());
             statement.setString(3, unban.getIssuer());
-            statement.setString(5, "unban");
-            statement.setString(6, unban.getIssuedOn().format(Utils.DEFAULT_DATE_FORMATTER));
+            statement.setString(4, "unban");
+            statement.setString(5, unban.getIssuedOn().format(Utils.DEFAULT_DATE_FORMATTER));
             statement.execute();
         } catch (SQLException ex) {
             ex.printStackTrace();
