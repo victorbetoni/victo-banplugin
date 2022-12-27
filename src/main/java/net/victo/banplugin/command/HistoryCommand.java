@@ -22,7 +22,7 @@ public class HistoryCommand implements CommandExecutor {
             return false;
         }
 
-        if(optService.isEmpty()) {
+        if(!optService.isPresent()) {
             sender.sendMessage(Message.Util.of("not_available", BanPlugin.instance()));
             return false;
         }

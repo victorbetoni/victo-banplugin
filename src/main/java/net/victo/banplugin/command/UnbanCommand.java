@@ -16,7 +16,7 @@ public class UnbanCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Optional<IBanService> optService = BanPlugin.instance().getServiceManager().getService(IBanService.class);
 
-        if(optService.isEmpty()) {
+        if(!optService.isPresent()) {
             sender.sendMessage(Message.Util.of("not_available", BanPlugin.instance()));
             return false;
         }

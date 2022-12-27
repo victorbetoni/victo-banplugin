@@ -1,6 +1,7 @@
 package net.victo.banplugin;
 
 import net.threader.lib.service.ServiceManager;
+import net.threader.lib.sql.ScriptExecutor;
 import net.threader.lib.sql.acessor.MySQLDBAcessor;
 import net.victo.banplugin.command.BanCommand;
 import net.victo.banplugin.command.HistoryCommand;
@@ -12,12 +13,19 @@ import net.victo.banplugin.service.SingleBanService;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 public class BanPlugin extends JavaPlugin {
 
     private static BanPlugin instance;
     private ServiceManager serviceManager;
 
     private MySQLDBAcessor acessor;
+
+    public static BanPlugin instance() {
+        return instance;
+    }
 
     @Override
     public void onEnable() {
@@ -31,10 +39,14 @@ public class BanPlugin extends JavaPlugin {
                 this.getConfig().get("database.username"),
                 this.getConfig().get("database.password"));
 
-        System.out.println(dbUrl);
-
         this.acessor = new MySQLDBAcessor(this, dbUrl);
         this.acessor.connect();
+
+        ScriptExecutor executor = new ScriptExecutor(
+                new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("/sql/setup.sql"))),
+                this.acessor.getConnection());
+        executor.execute();
+
 
         this.serviceManager = new ServiceManager();
         this.serviceManager.getRegistry().register(IBanService.class, new SingleBanService());
@@ -53,10 +65,6 @@ public class BanPlugin extends JavaPlugin {
 
     public ServiceManager getServiceManager() {
         return serviceManager;
-    }
-
-    public static BanPlugin instance() {
-        return instance;
     }
 
     public MySQLDBAcessor getDatabase() {
