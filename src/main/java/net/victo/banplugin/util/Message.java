@@ -39,7 +39,10 @@ public class Message {
 
     @Override
     public String toString() {
-        List<String> replaced = lines.stream().map(this::replaceVariables).collect(Collectors.toList());
+        List<String> replaced = lines.stream()
+                .map(this::replaceVariables)
+                .map(str -> ChatColor.translateAlternateColorCodes('&', str))
+                .collect(Collectors.toList());
         return String.join("\n", replaced);
     }
 

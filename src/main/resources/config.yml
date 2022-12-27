@@ -17,6 +17,6 @@ messages:
   not_available: "&cThe ban service isn't available yet."
   player_cmd: "&cCommand only available for player."
   you_are_banned: "&cYou are banned"
-  reason_info: "&eReason: &7{reason}"
+  reason_info: "&cReason: {reason}"
   end_in: "&cEnds in {months} months, {days} days, {hours} hours, {minutes} minutes and {seconds} seconds"
 
