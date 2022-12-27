@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 
 public class Message {
@@ -38,7 +39,8 @@ public class Message {
 
     @Override
     public String toString() {
-        return String.join("\n", lines);
+        List<String> replaced = lines.stream().map(this::replaceVariables).collect(Collectors.toList());
+        return String.join("\n", replaced);
     }
 
     public String replaceVariables(String line) {

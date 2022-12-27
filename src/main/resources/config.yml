@@ -18,5 +18,5 @@ messages:
   player_cmd: "&cCommand only available for player."
   you_are_banned: "&cYou are banned"
   reason_info: "&eReason: &7{reason}"
-  end_in: "Ends in {months} months, {days} days, {hours} hours, {minutes} minutes and {seconds} seconds"
+  end_in: "&cEnds in {months} months, {days} days, {hours} hours, {minutes} minutes and {seconds} seconds"
 

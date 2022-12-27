@@ -61,7 +61,7 @@ public class BanCommand implements CommandExecutor {
         }
 
         String input = args[1];
-        String reason = args.length == 4 ? args[3] : "";
+        String reason = args.length == 3 ? args[2] : "";
 
         LocalDateTime expire = now;
         try {
@@ -77,7 +77,7 @@ public class BanCommand implements CommandExecutor {
             return false;
         }
 
-        service.ban(player.getName(), reason, "", now, expire);
+        service.ban(player.getName(), issuer, reason, now, expire);
 
         return true;
     }

@@ -110,25 +110,34 @@ public class Utils {
      * */
     public static String getBanMessage(Banishment ban) {
         String banned = Message.Util.of("you_are_banned", BanPlugin.instance());
-        String reason = new Message.Builder().fromConfig("reason_info", BanPlugin.instance())
-                .addVariable("reason", ban.getReason()).build().toString();
+
+        String reason = "";
+        if(!ban.getReason().equals("")) {
+            reason = new Message.Builder().fromConfig("reason_info", BanPlugin.instance())
+                    .addVariable("reason", ban.getReason()).build().toString();
+        }
 
         String endsIn = "";
-
         if (ban.getExpiration() != null) {
-            Map<ChronoUnit, Long> diff = Utils.getDifference(ban.getIssuedOn(), ban.getExpiration());
+            Map<ChronoUnit, Long> diff = Utils.getDifference(LocalDateTime.now(), ban.getExpiration());
 
             endsIn = new Message.Builder().fromConfig("end_in", BanPlugin.instance())
-                    .addVariable("months", ChronoUnit.MONTHS)
-                    .addVariable("days", ChronoUnit.DAYS)
+                    .addVariable("months", diff.get(ChronoUnit.MONTHS))
+                    .addVariable("days", diff.get(ChronoUnit.DAYS))
                     .addVariable("hours", diff.get(ChronoUnit.HOURS))
                     .addVariable("minutes", diff.get(ChronoUnit.MINUTES))
                     .addVariable("seconds", diff.get(ChronoUnit.SECONDS)).build().toString();
         }
 
         String message = banned;
-        message = !ban.getReason().equals("") ? message + "\n" + reason : message;
-        message = !endsIn.equals("") ? message + "\n" + endsIn : message;
+
+        message = !reason.equals("")
+                ? message + "\n" + reason
+                : message;
+
+        message = !endsIn.equals("")
+                ? message + "\n" + endsIn
+                : message;
 
         return message;
     }
