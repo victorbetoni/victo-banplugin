@@ -123,7 +123,7 @@ public class Utils {
                     .addVariable("days", ChronoUnit.DAYS)
                     .addVariable("hours", diff.get(ChronoUnit.HOURS))
                     .addVariable("minutes", diff.get(ChronoUnit.MINUTES))
-                    .addVariable("seconds", diff.get(ChronoUnit.SECONDS)).toString();
+                    .addVariable("seconds", diff.get(ChronoUnit.SECONDS)).build().toString();
         }
 
         String message = banned;
