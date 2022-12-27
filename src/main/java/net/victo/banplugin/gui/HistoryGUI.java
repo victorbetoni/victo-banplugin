@@ -8,6 +8,7 @@ import net.victo.banplugin.domain.IBanService;
 import net.victo.banplugin.model.BanAction;
 import net.victo.banplugin.model.Banishment;
 import net.victo.banplugin.util.Utils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -98,7 +99,7 @@ public class HistoryGUI {
             openCurrentPage();
             return;
         }
-        pages.get(index.get()).open();
+        pages.get(index.get()).buildInventory().openInventory(holder);
     }
 
     /*
@@ -128,14 +129,14 @@ public class HistoryGUI {
          * Build and return the player's bans/unbans history GUI
          *
          * */
-        public InventoryGUI open() {
+        public InventoryGUI buildInventory() {
             AtomicInteger index = new AtomicInteger(0);
             GUIItem[] items = new GUIItem[actions.size() + 9];
             actions.forEach(action -> {
                 String title = action instanceof Banishment
                         ? ChatColor.RED + "Player banned"
                         : ChatColor.GREEN + "Player unbanned";
-                ItemStackBuilder builder = new ItemStackBuilder().type(Material.OAK_SIGN);
+                ItemStackBuilder builder = ItemStackBuilder.factory().type(Material.PAINTING);
                 builder.title(title);
                 builder.lore(
                         "",
@@ -179,7 +180,7 @@ public class HistoryGUI {
                     .title(ChatColor.RED + "Cancel ❌").build();
             items[index.getAndIncrement()] = new GUIItem(closeStack, 49, (event, player) -> player.closeInventory());
 
-            ItemStack foo = ItemStackBuilder.factory().type(Material.BLACK_STAINED_GLASS_PANE).title("").build();
+            ItemStack foo = ItemStackBuilder.factory().type(Material.STAINED_GLASS_PANE).title("").build();
             items[index.getAndIncrement()] = new GUIItem(foo.clone(), 46, (e, p) -> {});
             items[index.getAndIncrement()] = new GUIItem(foo.clone(), 47, (e, p) -> {});
             items[index.getAndIncrement()] = new GUIItem(foo.clone(), 48, (e, p) -> {});

@@ -52,8 +52,8 @@ shadowJar {
 
 dependencies {
     implementation group: 'com.google.guava', name: 'guava', version: '31.1-jre'
-    compileOnly "org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT"
-    shadow downloadedFile('https://github.com/victorbetoni/ThreaderLib/releases/download/fix-sql-executor/threader-lib.jar', 'threader-lib.jar')
+    compileOnly "org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT"
+    shadow downloadedFile('https://github.com/victorbetoni/ThreaderLib/releases/download/fix/threader-lib.jar', 'threader-lib.jar')
 }
 
 build.dependsOn(shadowJar)
