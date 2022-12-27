@@ -89,7 +89,11 @@ public class Queries {
             statement.setString(3, banishment.getReason());
             statement.setString(4, "ban");
             statement.setString(5, banishment.getIssuedOn().format(Utils.DEFAULT_DATE_FORMATTER));
-            statement.setString(6, banishment.getExpiration().format(Utils.DEFAULT_DATE_FORMATTER));
+            if(banishment.getExpiration() == null) {
+                statement.setString(6, null);
+            } else {
+                statement.setString(6, banishment.getExpiration().format(Utils.DEFAULT_DATE_FORMATTER));
+            }
             statement.execute();
         } catch (SQLException ex) {
             ex.printStackTrace();
