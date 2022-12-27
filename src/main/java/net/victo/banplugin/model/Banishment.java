@@ -15,6 +15,10 @@ public class Banishment extends BanAction {
         this.expiration = expiration;
     }
 
+    public void setExpiration(LocalDateTime expiration) {
+        this.expiration = expiration;
+    }
+
     public String getReason() {
         return reason;
     }

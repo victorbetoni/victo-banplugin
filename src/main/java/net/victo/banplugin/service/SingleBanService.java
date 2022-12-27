@@ -51,8 +51,9 @@ public class SingleBanService implements IBanService {
     @Override
     public boolean hasActiveBan(String player) {
         return this.getHistory(player).stream()
-                .flatMap(action -> action instanceof Banishment ? Stream.of((Banishment) action) : Stream.empty())
-                .anyMatch(ban -> !ban.expired());
+                .filter(action -> action instanceof Banishment)
+                .map(Banishment.class::cast)
+                .anyMatch(x -> !x.expired());
     }
 
     @Override
@@ -93,6 +94,7 @@ public class SingleBanService implements IBanService {
         this.getLatestIssuedActiveBan(player).ifPresent(ban -> {
             if(!ban.expired()) {
                 Unban unban = new Unban(UUID.randomUUID(), player, issuer, issued);
+                ban.setExpiration(issued);
                 Queries.UPDATE_BAN_EXPIRATION.accept(ban.getId(), issued);
                 Queries.STORE_UNBAN.accept(unban);
                 this.bans.put(player, unban);

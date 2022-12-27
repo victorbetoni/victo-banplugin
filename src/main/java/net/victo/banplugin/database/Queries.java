@@ -30,12 +30,13 @@ public class Queries {
 
                 switch (rs.getString("action")) {
                     case "ban":
+                        String expireOn = rs.getString("expire_on");
                         cache.put(target, new Banishment(
                                 uid,
                                 target,
                                 issuer, issuedOn,
                                 rs.getString("reason"),
-                                LocalDateTime.parse(rs.getString("expire_on"), Utils.DEFAULT_DATE_FORMATTER)));
+                                expireOn == null ? null : LocalDateTime.parse(expireOn, Utils.DEFAULT_DATE_FORMATTER)));
                         break;
                     case "unban":
                         cache.put(target, new Unban(uid, target, issuer, issuedOn));
@@ -63,12 +64,13 @@ public class Queries {
 
                 switch (result.getString("action")) {
                     case "ban":
+                        String expireOn = result.getString("expire_on");
                         history.add(new Banishment(
                                 uid,
                                 target,
                                 issuer, issuedOn,
                                 result.getString("reason"),
-                                LocalDateTime.parse(result.getString("expire_on"), Utils.DEFAULT_DATE_FORMATTER)));
+                                expireOn == null ? null : LocalDateTime.parse(expireOn, Utils.DEFAULT_DATE_FORMATTER)));
                         break;
                     case "unban":
                         history.add(new Unban(uid, target, issuer, issuedOn));
@@ -103,7 +105,7 @@ public class Queries {
 
     public static Consumer<Unban> STORE_UNBAN = (unban) -> {
         try (PreparedStatement statement = BanPlugin.instance().getDatabase().getConnection().prepareStatement(
-                "INSERT INTO ban_log (id, player, issuer, action, issued_on) VALUES (?, ?, ?, ?)")) {
+                "INSERT INTO ban_log (id, player, issuer, action, issued_on) VALUES (?, ?, ?, ?, ?)")) {
             statement.setString(1, unban.getId().toString());
             statement.setString(2, unban.getPlayer());
             statement.setString(3, unban.getIssuer());

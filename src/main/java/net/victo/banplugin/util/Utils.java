@@ -10,13 +10,14 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Stream;
 
 public class Utils {
 
     /*
      * The standard date formatter used in the entire project.
      * */
-    public static final DateTimeFormatter DEFAULT_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    public static final DateTimeFormatter DEFAULT_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
 
     /*
      * Parse the ban duration input provided by the player and return a map containing
@@ -26,6 +27,7 @@ public class Utils {
      * */
     public static Map<ChronoUnit, Long> parseDuration(String input) throws Exception {
         Map<ChronoUnit, Long> units = new HashMap<>();
+        Stream.of(ChronoUnit.values()).forEach(unit -> units.put(unit, 0L));
         List<String> timeUnits = new ArrayList<>();
         StringBuilder current = new StringBuilder();
         for (int i = 0; i < input.length(); i++) {
